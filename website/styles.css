@@ -250,7 +250,7 @@ body {
   display: block;
   width: 48px;
   height: 3px;
-  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  background: linear-gradient(90deg, #800020, #a8002a);
   margin-top: 0.6rem;
   margin-bottom: 1.75rem;
   border-radius: 2px;
@@ -267,7 +267,7 @@ body {
 .announcement {
   background: #fff;
   border: 1px solid var(--border);
-  border-left: 4px solid var(--gold);
+  border-left: 4px solid #800020;
   border-radius: var(--radius);
   padding: 1.4rem 1.6rem;
   margin-bottom: 1.25rem;
@@ -286,7 +286,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: #800020;
   margin-bottom: 0.4rem;
 }
 
