@@ -51,6 +51,7 @@
     <div class="container">
       <a href="#announcements">Announcements</a>
       <a href="#poll">Are You Coming?</a>
+      <a href="#photos">Share a Photo</a>
     </div>
   </nav>
 
@@ -95,6 +96,48 @@
       </div>
     </section>
 
+    <!-- PHOTO UPLOAD -->
+    <section id="photos" class="section">
+      <h2 class="section-title">Share a Photo</h2>
+      <p class="section-intro">
+        Got a throwback from THS? Share it with the class — the more the better.
+      </p>
+
+      <div class="upload-box" id="upload-box">
+        <form id="upload-form" enctype="multipart/form-data">
+
+          <div class="upload-drop-zone" id="drop-zone">
+            <input type="file" id="photo-input" name="photo" accept="image/*" hidden />
+            <div class="drop-zone-inner" id="drop-zone-inner">
+              <span class="drop-icon">📷</span>
+              <p class="drop-primary">Drag & drop a photo here</p>
+              <p class="drop-secondary">or <button type="button" class="drop-browse" id="browse-btn">browse to upload</button></p>
+              <p class="drop-hint">JPG, PNG, GIF · Max 10MB</p>
+            </div>
+            <div class="drop-preview" id="drop-preview" hidden>
+              <img id="preview-img" src="" alt="Preview" />
+              <button type="button" class="drop-remove" id="remove-photo">✕ Remove</button>
+            </div>
+          </div>
+
+          <div class="upload-fields">
+            <div class="field-group">
+              <label for="uploader-name">Your name <span class="required">*</span></label>
+              <input type="text" id="uploader-name" name="name" placeholder="e.g. Mark Whaley" required />
+            </div>
+            <div class="field-group">
+              <label for="photo-caption">Caption <span class="optional">(optional)</span></label>
+              <input type="text" id="photo-caption" name="caption" placeholder="e.g. Prom 2001, lunch table crew…" />
+            </div>
+          </div>
+
+          <button type="submit" class="upload-submit" id="upload-btn">Upload Photo</button>
+          <p class="upload-status" id="upload-status" hidden></p>
+
+        </form>
+      </div>
+    </section>
+
   </main>
 
   <footer class="site-footer">
@@ -129,6 +172,95 @@
 
     updateCountdown();
     setInterval(updateCountdown, 1000);
+
+    // ── Photo upload ──
+    const API_URL = 'REPLACE_WITH_API_URL';
+
+    const dropZone    = document.getElementById('drop-zone');
+    const photoInput  = document.getElementById('photo-input');
+    const browseBtn   = document.getElementById('browse-btn');
+    const dropInner   = document.getElementById('drop-zone-inner');
+    const dropPreview = document.getElementById('drop-preview');
+    const previewImg  = document.getElementById('preview-img');
+    const removeBtn   = document.getElementById('remove-photo');
+    const uploadForm  = document.getElementById('upload-form');
+    const uploadBtn   = document.getElementById('upload-btn');
+    const uploadStatus = document.getElementById('upload-status');
+
+    browseBtn.addEventListener('click', () => photoInput.click());
+
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) setPreview(file);
+    });
+
+    photoInput.addEventListener('change', () => {
+      if (photoInput.files[0]) setPreview(photoInput.files[0]);
+    });
+
+    removeBtn.addEventListener('click', () => {
+      photoInput.value = '';
+      previewImg.src = '';
+      dropPreview.hidden = true;
+      dropInner.hidden = false;
+    });
+
+    function setPreview(file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        previewImg.src = e.target.result;
+        dropInner.hidden = true;
+        dropPreview.hidden = false;
+      };
+      reader.readAsDataURL(file);
+      // Sync file to input if dropped
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      photoInput.files = dt.files;
+    }
+
+    uploadForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const formData = new FormData(uploadForm);
+
+      if (!photoInput.files[0]) {
+        showStatus('Please select a photo first.', 'error');
+        return;
+      }
+
+      uploadBtn.disabled = true;
+      uploadBtn.textContent = 'Uploading…';
+      hideStatus();
+
+      try {
+        const res = await fetch(`${API_URL}/upload`, { method: 'POST', body: formData });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Upload failed');
+        showStatus('Photo uploaded — thanks for sharing! 🎉', 'success');
+        uploadForm.reset();
+        previewImg.src = '';
+        dropPreview.hidden = true;
+        dropInner.hidden = false;
+      } catch (err) {
+        showStatus(err.message, 'error');
+      } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = 'Upload Photo';
+      }
+    });
+
+    function showStatus(msg, type) {
+      uploadStatus.textContent = msg;
+      uploadStatus.className = 'upload-status ' + type;
+      uploadStatus.hidden = false;
+    }
+    function hideStatus() {
+      uploadStatus.hidden = true;
+    }
 
     // Frosted nav on scroll
     const nav = document.getElementById('site-nav');
