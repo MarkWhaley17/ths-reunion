@@ -48,10 +48,15 @@
 
   <!-- NAV -->
   <nav class="site-nav" id="site-nav">
-    <div class="container">
-      <a href="#announcements">Announcements</a>
-      <a href="#poll">Are You Coming?</a>
-      <a href="#photos">Share a Photo</a>
+    <div class="nav-inner container">
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links" id="nav-links">
+        <a href="#announcements">Announcements</a>
+        <a href="#poll">Are You Coming?</a>
+        <a href="#photos">Share a Photo</a>
+      </div>
     </div>
   </nav>
 
@@ -261,6 +266,25 @@
     function hideStatus() {
       uploadStatus.hidden = true;
     }
+
+    // ── Hamburger menu ──
+    const hamburger = document.getElementById('nav-hamburger');
+    const navLinks  = document.getElementById('nav-links');
+
+    hamburger.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      hamburger.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', open);
+    });
+
+    // Close menu when a link is clicked
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', false);
+      });
+    });
 
     // Frosted nav on scroll
     const nav = document.getElementById('site-nav');
