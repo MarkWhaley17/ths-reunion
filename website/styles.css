@@ -1,0 +1,184 @@
+/* ── Reset & base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold:    #b8943f;
+  --navy:    #1a2744;
+  --cream:   #f9f6f0;
+  --text:    #222;
+  --muted:   #666;
+  --border:  #ddd;
+  --radius:  8px;
+  --max-w:   760px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: var(--cream);
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* ── Layout ── */
+.container {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+/* ── Header ── */
+.site-header {
+  background: var(--navy);
+  color: #fff;
+  text-align: center;
+  padding: 3rem 1.25rem 2.5rem;
+  border-bottom: 4px solid var(--gold);
+}
+
+.site-header .school-name {
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.site-header h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: normal;
+  letter-spacing: 0.02em;
+}
+
+.site-header .dates {
+  margin-top: 0.75rem;
+  color: rgba(255,255,255,0.75);
+  font-size: 1.05rem;
+}
+
+/* ── Nav ── */
+.site-nav {
+  background: var(--navy);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.site-nav .container {
+  display: flex;
+  gap: 0;
+  justify-content: center;
+}
+
+.site-nav a {
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.4rem;
+  transition: color 0.15s, background 0.15s;
+}
+
+.site-nav a:hover {
+  color: var(--gold);
+  background: rgba(255,255,255,0.05);
+}
+
+/* ── Sections ── */
+.section {
+  padding: 3.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.section:last-child { border-bottom: none; }
+
+.section h2 {
+  font-size: 1.75rem;
+  font-weight: normal;
+  color: var(--navy);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--gold);
+  display: inline-block;
+}
+
+.section-intro {
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  max-width: 560px;
+}
+
+/* ── Announcements ── */
+.announcement {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.announcement time {
+  display: block;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.announcement h3 {
+  font-size: 1.15rem;
+  color: var(--navy);
+  margin-bottom: 0.5rem;
+}
+
+/* ── Forms ── */
+.form-wrapper {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.form-wrapper iframe {
+  width: 100%;
+  height: 680px;
+  border: none;
+  display: block;
+}
+
+.form-fallback {
+  margin-top: 0.75rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.form-fallback a { color: var(--navy); }
+
+/* ── Footer ── */
+.site-footer {
+  background: var(--navy);
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+  padding: 2rem 1.25rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.85rem;
+}
+
+.site-footer a { color: var(--gold); text-decoration: none; }
+.site-footer a:hover { text-decoration: underline; }
+
+/* ── Responsive ── */
+@media (max-width: 500px) {
+  .site-nav .container { flex-direction: column; align-items: center; }
+  .site-nav a { padding: 0.6rem 1rem; }
+  .form-wrapper iframe { height: 820px; }
+}
