@@ -4,19 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>THS Class of 2001 Reunion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <header class="site-header">
-    <div class="container">
-      <p class="school-name">Towson High School</p>
-      <h1>Class of 2001 Reunion</h1>
-      <p class="dates">October 9–12, 2026 &nbsp;·&nbsp; Towson, MD</p>
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-grid-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Towson High School</p>
+      <h1 class="hero-title">Class of<br><span class="hero-year">2001</span></h1>
+      <p class="hero-subtitle">25-Year Reunion &nbsp;·&nbsp; Towson, MD</p>
+
+      <div class="countdown" id="countdown">
+        <div class="countdown-unit">
+          <span class="countdown-num" id="cd-days">--</span>
+          <span class="countdown-label">Days</span>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+          <span class="countdown-num" id="cd-hours">--</span>
+          <span class="countdown-label">Hours</span>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+          <span class="countdown-num" id="cd-mins">--</span>
+          <span class="countdown-label">Mins</span>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+          <span class="countdown-num" id="cd-secs">--</span>
+          <span class="countdown-label">Secs</span>
+        </div>
+      </div>
+
+      <p class="hero-date">October 9–12, 2026</p>
     </div>
+    <a href="#announcements" class="hero-scroll-hint" aria-label="Scroll down">&#8595;</a>
   </header>
 
-  <nav class="site-nav">
+  <!-- NAV -->
+  <nav class="site-nav" id="site-nav">
     <div class="container">
       <a href="#announcements">Announcements</a>
       <a href="#poll">Are You Coming?</a>
@@ -27,7 +58,7 @@
 
     <!-- ANNOUNCEMENTS -->
     <section id="announcements" class="section">
-      <h2>Announcements</h2>
+      <h2 class="section-title">Announcements</h2>
 
       <article class="announcement">
         <time datetime="2026-06-03">June 3, 2026</time>
@@ -40,12 +71,11 @@
       </article>
 
       <!-- Add new announcements above this comment -->
-
     </section>
 
     <!-- PARTICIPATION POLL -->
     <section id="poll" class="section">
-      <h2>Are You Coming?</h2>
+      <h2 class="section-title">Are You Coming?</h2>
       <p class="section-intro">
         Let us know which events you're interested in attending so we can plan
         accordingly.
@@ -69,9 +99,43 @@
 
   <footer class="site-footer">
     <div class="container">
-      <p>THS Class of 2001 &nbsp;·&nbsp; Questions? Email <a href="mailto:marktwhaley@gmail.com">marktwhaley@gmail.com</a></p>
+      <p class="footer-logo">THS '01</p>
+      <p>Questions? Email <a href="mailto:marktwhaley@gmail.com">marktwhaley@gmail.com</a></p>
+      <p class="footer-tag">See you in October 🎉</p>
     </div>
   </footer>
+
+  <script>
+    // Countdown to October 9, 2026 at 6pm Eastern
+    const target = new Date('2026-10-09T18:00:00-04:00');
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = target - now;
+      if (diff <= 0) {
+        document.getElementById('countdown').innerHTML = '<p class="countdown-done">It\'s happening! 🎉</p>';
+        return;
+      }
+      const days  = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins  = Math.floor((diff / (1000 * 60)) % 60);
+      const secs  = Math.floor((diff / 1000) % 60);
+
+      document.getElementById('cd-days').textContent  = String(days).padStart(3, '0');
+      document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('cd-mins').textContent  = String(mins).padStart(2, '0');
+      document.getElementById('cd-secs').textContent  = String(secs).padStart(2, '0');
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // Frosted nav on scroll
+    const nav = document.getElementById('site-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
 
 </body>
 </html>
