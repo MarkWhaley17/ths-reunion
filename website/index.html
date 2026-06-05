@@ -304,12 +304,11 @@
 
     async function loadGallery() {
       const grid    = document.getElementById('gallery-grid');
-      const loading = document.getElementById('gallery-loading');
       const count   = document.getElementById('gallery-count');
+      grid.innerHTML = '';
       try {
         const res    = await fetch(`${API_URL}/photos`);
         galleryPhotos = await res.json();
-        loading.remove();
 
         if (!galleryPhotos.length) {
           grid.innerHTML = '<p class="gallery-empty">No photos yet — be the first to share one!</p>';
