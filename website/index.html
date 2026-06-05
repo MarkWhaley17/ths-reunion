@@ -341,16 +341,21 @@
       document.getElementById('lightbox-img').src       = photo.image_url;
       document.getElementById('lightbox-name').textContent    = photo.name;
       document.getElementById('lightbox-caption').textContent = photo.caption || '';
-      document.getElementById('lightbox').hidden = false;
+      document.getElementById('lightbox').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
 
     function closeLightbox() {
-      document.getElementById('lightbox').hidden = true;
+      document.getElementById('lightbox').classList.remove('open');
       document.body.style.overflow = '';
     }
 
     document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('lightbox').classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+    });
+
     document.getElementById('lightbox').addEventListener('click', e => {
       if (e.target === document.getElementById('lightbox')) closeLightbox();
     });
@@ -368,8 +373,7 @@
     });
 
     document.addEventListener('keydown', e => {
-      if (document.getElementById('lightbox').hidden) return;
-      if (e.key === 'Escape')     closeLightbox();
+      if (!document.getElementById('lightbox').classList.contains('open')) return;
       if (e.key === 'ArrowLeft')  { lightboxIndex = (lightboxIndex - 1 + galleryPhotos.length) % galleryPhotos.length; openLightbox(lightboxIndex); }
       if (e.key === 'ArrowRight') { lightboxIndex = (lightboxIndex + 1) % galleryPhotos.length; openLightbox(lightboxIndex); }
     });
