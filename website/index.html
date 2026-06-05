@@ -322,7 +322,7 @@
         galleryPhotos.forEach((photo, i) => {
           const item = document.createElement('div');
           item.className = 'gallery-item';
-          item.innerHTML = `<img src="${photo.image_url}" alt="${photo.caption || photo.name}" loading="lazy" />
+          item.innerHTML = `<img src="${photo.image_url}" alt="${photo.caption || photo.name}" loading="lazy" onerror="this.closest('.gallery-item').style.display='none'" />
             <div class="gallery-item-overlay">
               <span class="gallery-item-name">${photo.name}</span>
               ${photo.caption ? `<span class="gallery-item-caption">${photo.caption}</span>` : ''}

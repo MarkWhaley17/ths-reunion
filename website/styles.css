@@ -629,6 +629,12 @@ body {
   width: 100%;
   display: block;
   transition: transform 0.3s;
+  min-height: 80px;
+  background: var(--border);
+}
+
+.gallery-item img[alt]::after {
+  display: none;
 }
 
 .gallery-item:hover img { transform: scale(1.03); }
