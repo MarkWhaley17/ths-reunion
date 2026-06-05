@@ -141,6 +141,30 @@
 
         </form>
       </div>
+
+      <!-- GALLERY -->
+      <div class="gallery-header">
+        <h3 class="gallery-title">Class Photos</h3>
+        <p class="gallery-count" id="gallery-count"></p>
+      </div>
+      <div class="gallery-grid" id="gallery-grid">
+        <div class="gallery-loading" id="gallery-loading">Loading photos…</div>
+      </div>
+
+      <!-- LIGHTBOX -->
+      <div class="lightbox" id="lightbox" hidden>
+        <button class="lightbox-close" id="lightbox-close">✕</button>
+        <button class="lightbox-prev" id="lightbox-prev">&#8592;</button>
+        <button class="lightbox-next" id="lightbox-next">&#8594;</button>
+        <div class="lightbox-inner">
+          <img id="lightbox-img" src="" alt="" />
+          <div class="lightbox-meta">
+            <p class="lightbox-name" id="lightbox-name"></p>
+            <p class="lightbox-caption" id="lightbox-caption"></p>
+          </div>
+        </div>
+      </div>
+
     </section>
 
   </main>
@@ -254,6 +278,7 @@
         if (!res.ok) throw new Error(data.error || 'Upload failed');
         showStatus('Photo uploaded — thanks for sharing! 🎉', 'success');
         uploadForm.reset();
+        loadGallery();
         previewImg.src = '';
         dropPreview.hidden = true;
         dropInner.hidden = false;
@@ -273,6 +298,85 @@
     function hideStatus() {
       uploadStatus.hidden = true;
     }
+
+    // ── Gallery ──
+    let galleryPhotos = [];
+    let lightboxIndex = 0;
+
+    async function loadGallery() {
+      const grid    = document.getElementById('gallery-grid');
+      const loading = document.getElementById('gallery-loading');
+      const count   = document.getElementById('gallery-count');
+      try {
+        const res    = await fetch(`${API_URL}/photos`);
+        galleryPhotos = await res.json();
+        loading.remove();
+
+        if (!galleryPhotos.length) {
+          grid.innerHTML = '<p class="gallery-empty">No photos yet — be the first to share one!</p>';
+          return;
+        }
+
+        count.textContent = `${galleryPhotos.length} photo${galleryPhotos.length !== 1 ? 's' : ''} shared`;
+
+        galleryPhotos.forEach((photo, i) => {
+          const item = document.createElement('div');
+          item.className = 'gallery-item';
+          item.innerHTML = `<img src="${photo.image_url}" alt="${photo.caption || photo.name}" loading="lazy" />
+            <div class="gallery-item-overlay">
+              <span class="gallery-item-name">${photo.name}</span>
+              ${photo.caption ? `<span class="gallery-item-caption">${photo.caption}</span>` : ''}
+            </div>`;
+          item.addEventListener('click', () => openLightbox(i));
+          grid.appendChild(item);
+        });
+      } catch (err) {
+        loading.textContent = 'Could not load photos.';
+      }
+    }
+
+    function openLightbox(index) {
+      lightboxIndex = index;
+      const photo = galleryPhotos[index];
+      document.getElementById('lightbox-img').src       = photo.image_url;
+      document.getElementById('lightbox-name').textContent    = photo.name;
+      document.getElementById('lightbox-caption').textContent = photo.caption || '';
+      document.getElementById('lightbox').hidden = false;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').hidden = true;
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+    document.getElementById('lightbox').addEventListener('click', e => {
+      if (e.target === document.getElementById('lightbox')) closeLightbox();
+    });
+
+    document.getElementById('lightbox-prev').addEventListener('click', e => {
+      e.stopPropagation();
+      lightboxIndex = (lightboxIndex - 1 + galleryPhotos.length) % galleryPhotos.length;
+      openLightbox(lightboxIndex);
+    });
+
+    document.getElementById('lightbox-next').addEventListener('click', e => {
+      e.stopPropagation();
+      lightboxIndex = (lightboxIndex + 1) % galleryPhotos.length;
+      openLightbox(lightboxIndex);
+    });
+
+    document.addEventListener('keydown', e => {
+      if (document.getElementById('lightbox').hidden) return;
+      if (e.key === 'Escape')     closeLightbox();
+      if (e.key === 'ArrowLeft')  { lightboxIndex = (lightboxIndex - 1 + galleryPhotos.length) % galleryPhotos.length; openLightbox(lightboxIndex); }
+      if (e.key === 'ArrowRight') { lightboxIndex = (lightboxIndex + 1) % galleryPhotos.length; openLightbox(lightboxIndex); }
+    });
+
+    // Reload gallery after successful upload
+    const origShowStatus = showStatus;
+    loadGallery();
 
     // ── Hamburger menu ──
     const hamburger = document.getElementById('nav-hamburger');
