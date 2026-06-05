@@ -145,7 +145,6 @@
       <!-- GALLERY -->
       <div class="gallery-header">
         <h3 class="gallery-title">Class Photos</h3>
-        <p class="gallery-count" id="gallery-count"></p>
       </div>
       <div class="gallery-grid" id="gallery-grid">
         <div class="gallery-loading" id="gallery-loading">Loading photos…</div>
@@ -317,7 +316,6 @@
           return;
         }
 
-        count.textContent = `${galleryPhotos.length} photo${galleryPhotos.length !== 1 ? 's' : ''} shared`;
 
         galleryPhotos.forEach((photo, i) => {
           const item = document.createElement('div');
